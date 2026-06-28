@@ -75,6 +75,8 @@ export const analyzeResume = async (req, res) => {
   }
 };
 
+
+
 export const generateQuestion = async (req, res) => {
   try {
     let { role, experience, mode, resumeText, projects, skills } = req.body;
@@ -211,6 +213,8 @@ export const generateQuestion = async (req, res) => {
   }
 };
 
+
+
 export const submitAnswer = async (req, res) => {
   try {
     const { interviewId, questionIndex, answer, timeTaken } = req.body;
@@ -248,58 +252,58 @@ export const submitAnswer = async (req, res) => {
       {
         role: "system",
         content: `
-You are a professional human interviewer evaluating a candidate's answer in a real interview.
+                  You are a professional human interviewer evaluating a candidate's answer in a real interview.
 
-Evaluate naturally and fairly, like a real person would.
+                  Evaluate naturally and fairly, like a real person would.
 
-Score the answer in these areas (0 to 10):
+                  Score the answer in these areas (0 to 10):
 
-1. Confidence – Does the answer sound clear, confident, and well-presented?
-2. Communication – Is the language simple, clear, and easy to understand?
-3. Correctness – Is the answer accurate, relevant, and complete?
+                  1. Confidence – Does the answer sound clear, confident, and well-presented?
+                  2. Communication – Is the language simple, clear, and easy to understand?
+                  3. Correctness – Is the answer accurate, relevant, and complete?
 
-Rules:
-- Be realistic and unbiased.
-- Do not give random high scores.
-- If the answer is weak, score low.
-- If the answer is strong and detailed, score high.
-- Consider clarity, structure, and relevance.
+                  Rules:
+                  - Be realistic and unbiased.
+                  - Do not give random high scores.
+                  - If the answer is weak, score low.
+                  - If the answer is strong and detailed, score high.
+                  - Consider clarity, structure, and relevance.
 
-Calculate:
-finalScore = average of confidence, communication, and correctness (rounded to nearest whole number).
+                  Calculate:
+                  finalScore = average of confidence, communication, and correctness (rounded to nearest whole number).
 
-Feedback Rules:
-- Write natural human feedback.
-- 10 to 15 words only.
-- Sound like real interview feedback.
-- Can suggest improvement if needed.
-- Do NOT repeat the question.
-- Do NOT explain scoring.
-- Keep tone professional and honest.
+                  Feedback Rules:
+                  - Write natural human feedback.
+                  - 10 to 15 words only.
+                  - Sound like real interview feedback.
+                  - Can suggest improvement if needed.
+                  - Do NOT repeat the question.
+                  - Do NOT explain scoring.
+                  - Keep tone professional and honest.
 
-Return ONLY valid JSON in this format:
+                  Return ONLY valid JSON in this format:
 
-{
-  "confidence": number,
-  "communication": number,
-  "correctness": number,
-  "finalScore": number,
-  "feedback": "short human feedback"
-}
-`,
+                  {
+                    "confidence": number,
+                    "communication": number,
+                    "correctness": number,
+                    "finalScore": number,
+                    "feedback": "short human feedback"
+                  }
+                  `,
       },
       {
         role: "user",
         content: `
-Question: ${question.question}
-Answer: ${answer}
-`,
+                  Question: ${question.question}
+                  Answer: ${answer}
+                  `,
       },
     ];
 
     const aiResponse = await askAi(messages);
 
-    const parsed = JSON.parse(aiResponse);
+    const parsed = JSON.parse(aiResponse);  
 
     question.answer = answer;
     question.confidence = parsed.confidence;
@@ -316,6 +320,8 @@ Answer: ${answer}
       .json({ message: `failed to submit answer ${error}` });
   }
 };
+
+
 
 export const finishInterview = async (req, res) => {
   try {
@@ -377,6 +383,8 @@ export const finishInterview = async (req, res) => {
   }
 };
 
+
+
 export const getMyInterviews = async (req, res) => {
   try {
     const interviews = await Interview.find({ userId: req.userId })
@@ -390,6 +398,8 @@ export const getMyInterviews = async (req, res) => {
       .json({ message: `failed to find currentUser Interview ${error}` });
   }
 };
+
+
 
 export const getInterviewReport = async (req, res) => {
   try {
